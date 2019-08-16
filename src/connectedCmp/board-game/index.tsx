@@ -4,11 +4,11 @@ import { GameService } from '../../lib/game/service/Types';
 import { GameId, Game } from '../../lib/game/persistence/Types';
 import { MarbleCtx, HoleCtx, MainCtxT } from '../../cmp/board-game/ctx';
 import { BoardGameFromBoardT } from './data';
-import { SlotPosition } from '../../lib/board/Types';
+import { CellPosition } from '../../lib/board/Types';
 import { BoardGameCmp } from '../../cmp/board-game/cmp/board-game';
 
 const IndexCmp: React.FC<{ service: GameService, gameId: GameId }> = ({ gameId, service }) => {
-  const [selectedMarble, setSelectedMarble] = useState<SlotPosition>()
+  const [selectedMarble, setSelectedMarble] = useState<CellPosition>()
   const [game, setGame] = useState<Game | null>(null)
   useEffect(() => {
     service.getGame({ id: gameId })

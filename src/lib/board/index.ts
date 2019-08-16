@@ -1,8 +1,8 @@
-import { SlotPosition, Slot, DirTag, Directions, Board, StepDirection, Move, AbstractMove } from './Types';
+import { CellPosition, Cell, DirTag, Directions, Board, StepDirection, Move, AbstractMove } from './Types';
 
-export const isMarble = (_: Slot): _ is Slot.Marble => _ === Slot.Marble
-export const isHole = (_: Slot): _ is Slot.Hole => _ === Slot.Hole
-export const isOut = (_: Slot): _ is Slot._Out => _ === Slot._Out
+export const isMarble = (_: Cell): _ is Cell.Marble => _ === Cell.Marble
+export const isHole = (_: Cell): _ is Cell.Hole => _ === Cell.Hole
+export const isOut = (_: Cell): _ is Cell._Out => _ === Cell._Out
 
 
 export const DIRTAGS: DirTag[] = ['N', 'E', 'W', 'S']
@@ -13,19 +13,19 @@ export const DIRECTIONS: Directions = {
   S: [0, 1]
 }
 
-export const isSamePosition = (pos1: SlotPosition, pos2: SlotPosition) => pos1[1] === pos2[1] && pos1[0] === pos2[0]
+export const isSamePosition = (pos1: CellPosition, pos2: CellPosition) => pos1[1] === pos2[1] && pos1[0] === pos2[0]
 
-export const getSlot = (board: Board) => ([x, y]: SlotPosition) =>
+export const getCell = (board: Board) => ([x, y]: CellPosition) =>
   (x < 0 || y < 0 || y >= board.length || x >= board[0].length)
-    ? Slot._Out
+    ? Cell._Out
     : board[y][x]
 
 
-export const getRelativePosition = ([x, y]: SlotPosition) =>
-  ([dx, dy]: StepDirection, amount: 1 | 2): SlotPosition => {
+export const getRelativePosition = ([x, y]: CellPosition) =>
+  ([dx, dy]: StepDirection, amount: 1 | 2): CellPosition => {
     const newX = (x + dx * amount)
     const newY = (y + dy * amount)
-    return [newX, newY] as SlotPosition
+    return [newX, newY] as CellPosition
   }
 
 export const getMove = (abstractMove: AbstractMove): Move => {
@@ -42,11 +42,11 @@ export const getMove = (abstractMove: AbstractMove): Move => {
 }
 export const getValidMove = (board: Board) => (absMove: AbstractMove): Move | null => {
   const move = getMove(absMove)
-  const from = getSlot(board)(move.from)
+  const from = getCell(board)(move.from)
   if (!isMarble(from)) { return null }
-  const eating = getSlot(board)(move.eating)
+  const eating = getCell(board)(move.eating)
   if (!isMarble(eating)) { return null }
-  const movingTo = getSlot(board)(move.movingTo)
+  const movingTo = getCell(board)(move.movingTo)
   if (!isHole(movingTo)) { return null }
   return move
 }
@@ -54,10 +54,10 @@ export const getValidMove = (board: Board) => (absMove: AbstractMove): Move | nu
 export const getAllValidMovesForBoard = (board: Board): Move[] =>
   board.reduce(
     (allMoves, row, y) => allMoves.concat(
-      row.reduce((rowMoves, _slot, x) => rowMoves.concat(validMovesFromPosition(board)([x, y] as SlotPosition)), [] as Move[]
+      row.reduce((rowMoves, _cell, x) => rowMoves.concat(validMovesFromPosition(board)([x, y] as CellPosition)), [] as Move[]
       )), [] as Move[])
 
-export const validMovesFromPosition = (board: Board) => (from: SlotPosition): Move[] =>
+export const validMovesFromPosition = (board: Board) => (from: CellPosition): Move[] =>
   DIRTAGS.reduce<Move[]>((validMoves, direction) => {
     const validMove = getValidMove(board)({ from, direction })
     if (!validMove) { return validMoves }
@@ -66,7 +66,7 @@ export const validMovesFromPosition = (board: Board) => (from: SlotPosition): Mo
   }, [])
 
 
-export const canMoveHere = (board: Board) => (from: SlotPosition, to: SlotPosition): DirTag | void => {
+export const canMoveHere = (board: Board) => (from: CellPosition, to: CellPosition): DirTag | void => {
 
   const move = validMovesFromPosition(board)(from)
     .find(move => isSamePosition(move.movingTo, to))
@@ -78,25 +78,25 @@ export const move = (board: Board) => (move: AbstractMove): Board | null => {
   const newBoard = board.map(row => row.slice())
 
   const [from_x, from_y] = validMove.from
-  newBoard[from_y][from_x] = Slot.Hole
+  newBoard[from_y][from_x] = Cell.Hole
 
   const [eating_x, eating_y] = validMove.eating
-  newBoard[eating_y][eating_x] = Slot.Hole
+  newBoard[eating_y][eating_x] = Cell.Hole
 
   const [movingTo_x, movingTo_y] = validMove.movingTo
-  newBoard[movingTo_y][movingTo_x] = Slot.Marble
+  newBoard[movingTo_y][movingTo_x] = Cell.Marble
 
   return newBoard
 }
 
-// export const isPositionsEquals = (p1: SlotPosition, p2: SlotPosition) => p1[0] === p2[0] && p1[1] === p2[1]
-// export const getRelativeSlot = (board: Board) =>
-//   (position: SlotPosition) =>
-//     (stepDirectio: StepDirection, amount: 1 | 2): SlotAny =>
-//       getSlot(board)(getRelativePosition(position)(stepDirectio, amount))
+// export const isPositionsEquals = (p1: CellPosition, p2: CellPosition) => p1[0] === p2[0] && p1[1] === p2[1]
+// export const getRelativeCell = (board: Board) =>
+//   (position: CellPosition) =>
+//     (stepDirectio: StepDirection, amount: 1 | 2): CellAny =>
+//       getCell(board)(getRelativePosition(position)(stepDirectio, amount))
 
 // export const getRelativePositionType = (board: Board) =>
-//   (position: SlotPosition) =>
-//     (stepDirectio: StepDirection, amount: 1 | 2): SlotType =>
+//   (position: CellPosition) =>
+//     (stepDirectio: StepDirection, amount: 1 | 2): CellType =>
 //       getPositionType(board)(getRelativePosition(position)(stepDirectio, amount))
 

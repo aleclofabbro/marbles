@@ -1,40 +1,40 @@
-import { Board as BoardT, Slot as SlotT, SlotPosition } from '../../lib/board/Types'
+import { Board as BoardT, Cell as CellT, CellPosition } from '../../lib/board/Types'
 import * as lib from '../../lib/board'
 import { BoardGame } from '../../cmp/board-game/type/BoardGame';
-import { Slot, SlotMarble, SlotHole, SlotOut } from '../../cmp/board-game/type/Slot';
+import { Cell, CellMarble, CellHole, CellOut } from '../../cmp/board-game/type/Cell';
 
-export const BoardGameFromBoardT = (boardt: BoardT, selectedMarble?: SlotPosition): BoardGame => {
+export const BoardGameFromBoardT = (boardt: BoardT, selectedMarble?: CellPosition): BoardGame => {
   return {
     selectedMarble,
     board: {
-      slots: boardt.map((row, nrow) => row.map((slotT, ncol) => SlotFromSlotT(boardt, slotT, [ncol, nrow], selectedMarble)))
+      cells: boardt.map((row, nrow) => row.map((cellT, ncol) => CellFromCellT(boardt, cellT, [ncol, nrow], selectedMarble)))
     },
   }
 }
-export const SlotFromSlotT = (
+export const CellFromCellT = (
   board: BoardT,
-  slotT: SlotT,
-  pos: SlotPosition,
-  selectedPos?: SlotPosition,
-): Slot => {
-  if (lib.isMarble(slotT)) {
+  cellT: CellT,
+  pos: CellPosition,
+  selectedPos?: CellPosition,
+): Cell => {
+  if (lib.isMarble(cellT)) {
     const selected = !!selectedPos && lib.isSamePosition(pos, selectedPos)
-    const slotMarble: SlotMarble = {
-      type: slotT,
+    const cellMarble: CellMarble = {
+      type: cellT,
       pos,
       selected: selected,
       canSelect: selected || !!lib.validMovesFromPosition(board)(pos).length
     }
-    return slotMarble
-  } else if (lib.isHole(slotT)) {
-    const slotMarble: SlotHole = {
-      type: slotT,
+    return cellMarble
+  } else if (lib.isHole(cellT)) {
+    const cellMarble: CellHole = {
+      type: cellT,
       pos,
       validMoveDirection: selectedPos && lib.canMoveHere(board)(selectedPos, pos)
     }
-    return slotMarble
+    return cellMarble
   } else {
-    const slotOut: SlotOut = { type: slotT, pos }
-    return slotOut
+    const cellOut: CellOut = { type: cellT, pos }
+    return cellOut
   }
 }

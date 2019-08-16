@@ -1,5 +1,5 @@
-import { Slot } from './Slot';
+import { Cell } from './Cell';
 
 export interface Board {
-  slots: Slot[][]
+  cells: Cell[][]
 }

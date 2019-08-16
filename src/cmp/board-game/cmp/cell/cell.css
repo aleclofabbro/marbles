@@ -1,0 +1,58 @@
+
+.cell {
+  /* float:left; */
+  height: 100%;
+  width: 100%; 
+  user-select: none;
+}
+
+.cell:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.hole  {
+  background: radial-gradient(at 57% 57%, rgba(117,49,0,0.1) 25%, rgba(117,49,0,0.35) 40%, rgba(117,49,0,0.6) 62%);
+  border-radius: 50%;
+  height: 100%;
+  /* width: 100%; */
+  box-sizing: border-box;
+}
+/* .hole:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}  */
+.marble  {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  background-image: url('marble.png');
+  background-size: contain;
+}
+/* .marble:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}  */
+.hole.can-move-here  {
+  /* background: radial-gradient(at 57% 57%, rgba(212, 250, 0, 0.1) 25%, rgba(212, 250, 0,0.35) 40%, rgba(212, 250, 0, 0.644) 62%); */
+  box-shadow: inset 3px 3px 12px 4px rgba(212, 250, 0, 0.897);
+  cursor:pointer;
+}
+.hole.can-move-here:hover  {
+  background-color: rgba(405, 405, 405, 0.733)
+}
+
+.marble.selectable {
+  /* background: radial-gradient(at 57% 57%, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255,0.35) 40%, rgba(255, 255, 255, 0.644) 62%);  */
+  cursor:pointer;
+  /* background: radial-gradient(circle, rgba(255,255,255, 0) 98%,rgba(255,255,255, 1) 100%); */
+  box-shadow: 0 0 0.15em 0.3em rgba(405, 405, 405, 0.733);
+}
+.marble.selectable:hover,
+.marble.selected {
+  box-shadow: 0 0 0.15em 0.3em rgba(0, 64, 240, 0.733);
+}
