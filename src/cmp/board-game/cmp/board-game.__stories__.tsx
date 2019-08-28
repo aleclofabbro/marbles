@@ -3,16 +3,16 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { BoardGameCmp } from './board-game';
 import { STANDARD_BOARD } from '../../../lib/board/standardInitialBoard';
-import { BoardGameFromBoardT } from '../../../connectedCmp/board-game/data';
-import { JestActionProvider } from '../ctx/jestActionProvider';
+import { BoardDataFromBoard } from '../../../connectedCmp/board-game/reducerFunctions';
+import { JestActionProvider } from '../../../ctx/board-game/jestActionProvider';
 
 storiesOf('cmp/board-game', module).add(
   'initial without selection',
   () => {
-    const game = BoardGameFromBoardT(STANDARD_BOARD)
+    const board = BoardDataFromBoard(STANDARD_BOARD)
     return (
       <JestActionProvider >
-        <BoardGameCmp {...{ game }} />
+        <BoardGameCmp {...{ board }} />
       </JestActionProvider>
     )
   },
@@ -20,10 +20,10 @@ storiesOf('cmp/board-game', module).add(
 storiesOf('cmp/board-game', module).add(
   'initial with selection',
   () => {
-    const game = BoardGameFromBoardT(STANDARD_BOARD, [5, 3])
+    const board = BoardDataFromBoard(STANDARD_BOARD, [1, 3])
     return (
       <JestActionProvider>
-        <BoardGameCmp {...{ game }} />
+        <BoardGameCmp {...{ board }} />
       </JestActionProvider>
     )
   },

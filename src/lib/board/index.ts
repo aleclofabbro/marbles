@@ -89,6 +89,34 @@ export const move = (board: Board) => (move: AbstractMove): Board | null => {
   return newBoard
 }
 
+
+export const moveBack = (board: Board) => (move: AbstractMove): Board | null => {
+  const validMove = getValidBackMove(board)(move)
+  if (!validMove) { return null }
+  const newBoard = board.map(row => row.slice())
+
+  const [from_x, from_y] = validMove.from
+  newBoard[from_y][from_x] = Cell.Marble
+
+  const [eating_x, eating_y] = validMove.eating
+  newBoard[eating_y][eating_x] = Cell.Marble
+
+  const [movingTo_x, movingTo_y] = validMove.movingTo
+  newBoard[movingTo_y][movingTo_x] = Cell.Hole
+
+  return newBoard
+}
+
+export const getValidBackMove = (board: Board) => (absMove: AbstractMove): Move | null => {
+  const move = getMove(absMove)
+  const from = getCell(board)(move.from)
+  if (!isHole(from)) { return null }
+  const eating = getCell(board)(move.eating)
+  if (!isHole(eating)) { return null }
+  const movingTo = getCell(board)(move.movingTo)
+  if (!isMarble(movingTo)) { return null }
+  return move
+}
 // export const isPositionsEquals = (p1: CellPosition, p2: CellPosition) => p1[0] === p2[0] && p1[1] === p2[1]
 // export const getRelativeCell = (board: Board) =>
 //   (position: CellPosition) =>

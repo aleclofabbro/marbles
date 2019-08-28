@@ -1,11 +1,11 @@
 import * as lib from '../../../board'
 import { STANDARD_BOARD } from '../../../board/standardInitialBoard';
-import { Persistence, Game, GameId } from '../Types';
+import { Persistence } from '../Types';
 import { Board } from '../../../board/Types';
+import { GameId, Game } from '../../Types';
 
 export interface SimplePersistenceStorage {
-  newGame(_: { board: Board }): Promise<GameId>
-  getBoard(_: { id: GameId }): Promise<Board | null>
+  newGame(_: { initialBoard: Board }): Promise<Game>
   get(_: { id: GameId }): Promise<Game | null>
   update(_: { game: Game }): Promise<boolean>
 }
@@ -19,30 +19,20 @@ export function simple_persistence({
 
   const move: Persistence['move'] =
     async ({ id, move: absMove }) => {
-      const currentBoard = await storage.getBoard({ id })
-      if (!currentBoard) { return null }
-      const board = lib.move(currentBoard)(absMove)
-      if (!board) { return null }
+      const storedGame = await storage.get({ id })
+      if (!storedGame) { return null }
+      const newBoard = lib.move(storedGame.lastBoard)(absMove)
+      if (!newBoard) { return null }
       const game: Game = {
-        id,
-        board
+        ...storedGame,
+        lastBoard: newBoard,
+        moves: [absMove, ...storedGame.moves]
       }
       storage.update({ game })
       return game
     }
 
-  const newGame: Persistence['newGame'] = async ({ initialBoard = STANDARD_BOARD }) => {
-    const nextValidMoves = lib.getAllValidMovesForBoard(initialBoard)
-    const insertingGame = {
-      board: initialBoard,
-      nextValidMoves
-    }
-    const id = await storage.newGame(insertingGame)
-    return {
-      ...insertingGame,
-      id
-    }
-  }
+  const newGame: Persistence['newGame'] = async ({ initialBoard = STANDARD_BOARD }) => storage.newGame({ initialBoard })
 
   return {
     move,

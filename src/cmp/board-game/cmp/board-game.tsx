@@ -1,11 +1,11 @@
 import React from 'react';
-import { BoardGame } from '../type/BoardGame';
+import { BoardData } from '../type/BoardData';
 import { BoardCmp } from './board/board';
 
-export const BoardGameCmp: React.FC<{ game: BoardGame }> = ({ game }) => {
+export const BoardGameCmp: React.FC<{ board: BoardData }> = ({ board }) => {
   return (
     <div className={`board-game`}>
-      <BoardCmp {...{ board: game.board }}></BoardCmp>
+      <BoardCmp {...{ board }}></BoardCmp>
     </div>
   )
 }
