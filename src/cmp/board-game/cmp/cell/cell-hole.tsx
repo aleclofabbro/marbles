@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import './cell.css'
-import { CellHole } from '../../type/Cell';
-import { HoleCtx } from '../../ctx';
+import { CellHole } from '../../type/CellData';
+import { HoleCtx } from '../../../../ctx/board-game';
 export const CellHoleCmp: React.FC<{ hole: CellHole }> = ({ hole }) => {
   const ctx = useContext(HoleCtx)
   const clickHandler = useCallback(

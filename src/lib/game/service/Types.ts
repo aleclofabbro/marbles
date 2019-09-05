@@ -1,6 +1,6 @@
 import StrictEventEmitter from 'strict-event-emitter-types';
 import { EventEmitter } from 'events';
-import { Game, GameId } from '../persistence/Types';
+import { Game, GameId } from '../Types';
 import { AbstractMove, Board } from '../../board/Types';
 
 export interface GameServiceEventMap {

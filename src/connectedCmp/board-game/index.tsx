@@ -1,37 +1,35 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import { GameService } from '../../lib/game/service/Types';
-import { GameId, Game } from '../../lib/game/persistence/Types';
-import { MarbleCtx, HoleCtx, MainCtxT } from '../../cmp/board-game/ctx';
-import { BoardGameFromBoardT } from './data';
-import { CellPosition } from '../../lib/board/Types';
+import { MarbleCtx, HoleCtx, MainCtxT } from '../../ctx/board-game';
 import { BoardGameCmp } from '../../cmp/board-game/cmp/board-game';
+import { useBoardGameReducer } from './boardGameReducer';
+import { Board, AbstractMove } from '../../lib/board/Types';
 
-const IndexCmp: React.FC<{ service: GameService, gameId: GameId }> = ({ gameId, service }) => {
-  const [selectedMarble, setSelectedMarble] = useState<CellPosition>()
-  const [game, setGame] = useState<Game | null>(null)
-  useEffect(() => {
-    service.getGame({ id: gameId })
-      .then(game => {
-        if (game) {
-          setGame(game)
-        } else { }
-      })
-
-  }, [gameId, service, setGame, selectedMarble])
-  const mainCtx: MainCtxT = {
-    selectMarble: setSelectedMarble,
-    moveHere: direction => {
-      selectedMarble && service.move({ id: gameId, move: { direction, from: selectedMarble } }).then(setGame)
+const IndexCmp: React.FC<{ board: Board, history?: AbstractMove[] }> =
+  ({ board, history }) => {
+    const [state, dispatch] = useBoardGameReducer(board, history)
+    const mainCtx: MainCtxT = {
+      selectMarble: pos => dispatch({ a: 'selectMarble', p: pos }),
+      moveHere: direction => dispatch({ a: 'moveHere', p: direction }),
+      history: back => dispatch({ a: 'history', p: back })
     }
+
+    return (
+      <MarbleCtx.Provider value={mainCtx}>
+        <HoleCtx.Provider value={mainCtx}>
+
+          <button
+            disabled={!state.movesHistory.past.length}
+            onClick={() => mainCtx.history(true)}
+          >&lt;---({state.movesHistory.past.length})</button>
+          <button
+            disabled={!state.movesHistory.future.length}
+            onClick={() => mainCtx.history(false)}
+          >---&gt;({state.movesHistory.future.length})</button>
+
+          <BoardGameCmp board={state.boardData}></BoardGameCmp>
+        </HoleCtx.Provider>
+      </MarbleCtx.Provider>
+    )
   }
 
-  return (
-    <MarbleCtx.Provider value={mainCtx}>
-      <HoleCtx.Provider value={mainCtx}>
-        {game && <BoardGameCmp game={BoardGameFromBoardT(game.board, selectedMarble)}></BoardGameCmp>}
-      </HoleCtx.Provider>
-    </MarbleCtx.Provider>
-  )
-}
 export default IndexCmp;

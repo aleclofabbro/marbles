@@ -3,19 +3,19 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { BoardCmp } from './board';
 import { STANDARD_BOARD } from '../../../../lib/board/standardInitialBoard';
-import { BoardGameFromBoardT } from '../../../../connectedCmp/board-game/data';
-import { JestActionProvider } from '../../ctx/jestActionProvider';
-import { Board, Cell } from '../../../../lib/board/Types';
+import { BoardDataFromBoard } from '../../../../connectedCmp/board-game/reducerFunctions';
+import { JestActionProvider } from '../../../../ctx/board-game/jestActionProvider';
+import { Cell } from '../../../../lib/board/Types';
 
-export const _: Cell._Out = Cell._Out
-export const X: Cell.Hole = Cell.Hole
-export const O: Cell.Marble = Cell.Marble
+const _: Cell._Out = Cell._Out
+const X: Cell.Hole = Cell.Hole
+const O: Cell.Marble = Cell.Marble
 
 storiesOf('cmp/board', module)
   .add(
     'all out empty board',
     () => {
-      const board: Board = [
+      const boardt = [
         [_, _, _, _, _, _, _],
         [_, _, _, _, _, _, _],
         [_, _, _, _, _, _, _],
@@ -24,10 +24,10 @@ storiesOf('cmp/board', module)
         [_, _, _, _, _, _, _],
         [_, _, _, _, _, _, _],
       ]
-      const boardgame = BoardGameFromBoardT(board, [5, 3])
+      const board = BoardDataFromBoard(boardt, [5, 3])
       return (
         <JestActionProvider>
-          <BoardCmp {...{ board: boardgame.board }} />
+          <BoardCmp {...{ board }} />
         </JestActionProvider>
       )
     },
@@ -35,7 +35,7 @@ storiesOf('cmp/board', module)
   .add(
     'all holes board',
     () => {
-      const board: Board = [
+      const boardt = [
         [X, X, X, X, X, X, X,],
         [X, X, X, X, X, X, X,],
         [X, X, X, X, X, X, X,],
@@ -44,10 +44,10 @@ storiesOf('cmp/board', module)
         [X, X, X, X, X, X, X,],
         [X, X, X, X, X, X, X,],
       ]
-      const boardgame = BoardGameFromBoardT(board, [5, 3])
+      const board = BoardDataFromBoard(boardt, [5, 3])
       return (
         <JestActionProvider>
-          <BoardCmp {...{ board: boardgame.board }} />
+          <BoardCmp {...{ board }} />
         </JestActionProvider>
       )
     },
@@ -55,7 +55,7 @@ storiesOf('cmp/board', module)
   .add(
     'all holes 1 marble board',
     () => {
-      const board: Board = [
+      const boardt = [
         [O, X, X, X, X, X, X,],
         [X, X, X, X, X, X, X,],
         [X, X, X, X, X, X, X,],
@@ -64,10 +64,10 @@ storiesOf('cmp/board', module)
         [X, X, X, X, X, X, X,],
         [X, X, X, X, X, X, X,],
       ]
-      const boardgame = BoardGameFromBoardT(board, [5, 3])
+      const board = BoardDataFromBoard(boardt, [5, 3])
       return (
         <JestActionProvider>
-          <BoardCmp {...{ board: boardgame.board }} />
+          <BoardCmp {...{ board }} />
         </JestActionProvider>
       )
     },
@@ -75,10 +75,10 @@ storiesOf('cmp/board', module)
   .add(
     'initial without selection',
     () => {
-      const boardgame = BoardGameFromBoardT(STANDARD_BOARD)
+      const board = BoardDataFromBoard(STANDARD_BOARD)
       return (
         <JestActionProvider>
-          <BoardCmp {...{ board: boardgame.board }} />
+          <BoardCmp {...{ board }} />
         </JestActionProvider>
       )
     },
@@ -86,10 +86,10 @@ storiesOf('cmp/board', module)
   .add(
     'initial with selection',
     () => {
-      const boardgame = BoardGameFromBoardT(STANDARD_BOARD, [5, 3])
+      const board = BoardDataFromBoard(STANDARD_BOARD, [5, 3])
       return (
         <JestActionProvider>
-          <BoardCmp {...{ board: boardgame.board }} />
+          <BoardCmp {...{ board }} />
         </JestActionProvider>
       )
     },

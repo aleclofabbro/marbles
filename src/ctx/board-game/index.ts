@@ -1,10 +1,11 @@
 import { createContext } from 'react';
-import { alertUnimplementedAction } from '../../../lib/utils/action-proxy/alertUnimplementedAction';
-import { CellPosition, DirTag } from '../../../lib/board/Types';
+import { alertUnimplementedAction } from '../../lib/utils/action-proxy/alertUnimplementedAction';
+import { CellPosition, DirTag } from '../../lib/board/Types';
 
 export type MainCtxT = {
   selectMarble(pos: CellPosition): unknown
   moveHere(dirtag: DirTag): unknown
+  history(back: boolean): unknown
 }
 const _mainCtxPlaceholder = alertUnimplementedAction<MainCtxT>()
 export const MainCtx = createContext<MainCtxT>(_mainCtxPlaceholder)

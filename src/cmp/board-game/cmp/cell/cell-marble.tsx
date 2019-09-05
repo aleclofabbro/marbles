@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react';
 import './cell.css'
-import { CellMarble } from '../../type/Cell';
-import { MarbleCtx } from '../../ctx';
+import { CellMarble } from '../../type/CellData';
+import { MarbleCtx } from '../../../../ctx/board-game';
 export const CellMarbleCmp: React.FC<{ marble: CellMarble }> = ({ marble }) => {
   const ctx = useContext(MarbleCtx)
   const clickHandler = useCallback(

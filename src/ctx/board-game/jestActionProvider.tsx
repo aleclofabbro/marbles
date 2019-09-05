@@ -1,6 +1,6 @@
 import React from 'react';
 import { MainCtx, MarbleCtx, HoleCtx } from '.';
-import { jestAction } from '../../../lib/utils/action-proxy/jest-action';
+import { jestAction } from '../../lib/utils/action-proxy/jest-action';
 
 export const JestActionProvider: React.FC = ({ children }) => {
 
